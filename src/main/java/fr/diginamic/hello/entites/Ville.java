@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -16,26 +18,28 @@ public class Ville {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@Size(min = 2) @NotNull	 
+
+	@Size(min = 2, message = "Le nom de la ville doit avoir au moins 2 caractères.")
 	private String nom;
-	
-	@Min(value = 1) @NotNull
+
+	@NotNull(message = "La population ne peut pas être nulle.")
+	@Min(value = 1, message = "La population doit être au moins égale à 1.")
 	private int population;
 
-	public Ville( String nom, int population) {
+	@ManyToOne
+	@JoinColumn(name = "id_departement")
+	private Departement departement;
+
+	public Ville(String nom, int population, Departement departement) {
 		super();
 		this.nom = nom;
 		this.population = population;
+		this.departement = departement;
 	}
 
-	
-	
 	public Ville() {
 		super();
 	}
-
-
 
 	/**
 	 * @return the nom
@@ -79,21 +83,29 @@ public class Ville {
 		this.id = id;
 	}
 
+	/**
+	 * @return the departement
+	 */
+	public Departement getDepartement() {
+		return departement;
+	}
 
+	/**
+	 * @param departement the departement to set
+	 */
+	public void setDepartement(Departement departement) {
+		this.departement = departement;
+	}
 
 	@Override
 	public String toString() {
-		return " [id :" + " " + id + " - " + nom + " - " + population + "]";
+		return " [" + nom + ", population=" + population + ", departement = " + departement + "]";
 	}
-
-
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(nom, population);
 	}
-
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -106,7 +118,5 @@ public class Ville {
 		Ville other = (Ville) obj;
 		return Objects.equals(nom, other.nom) && population == other.population;
 	}
-
-
 
 }
