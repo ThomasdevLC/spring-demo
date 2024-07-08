@@ -1,8 +1,9 @@
-package fr.diginamic.hello.services;
+package fr.diginamic.hello.startup;
 
 
 import fr.diginamic.hello.entites.Departement;
 import fr.diginamic.hello.entites.Ville;
+import fr.diginamic.hello.services.VilleService;
 
 import java.net.URL;
 import java.nio.file.Files;
@@ -58,7 +59,6 @@ public class ExtractData implements CommandLineRunner {
                 int codeDepartement = Integer.parseInt(codeDepartementDigits); 
                 
                 Departement departement = new Departement(codeDepartement);
-
               
                 Ville ville = new Ville(nomCommune, populationTotale, departement);
                 

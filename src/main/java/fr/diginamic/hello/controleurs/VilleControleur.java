@@ -138,5 +138,15 @@ public class VilleControleur {
             return ResponseEntity.ok(villes);
         }
     }
-	
+    
+    @GetMapping("/topVilles/{departementCode}/{n}")
+    public ResponseEntity<List<Ville>> getTopNVillesByDepartement(@PathVariable("departementCode") int code, @PathVariable int n) {
+        List<Ville> villes = villeService.getTopVillesByDepartement(code, n);
+        
+        if (villes.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(villes); 
+        }
+    }
 }

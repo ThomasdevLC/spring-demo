@@ -8,20 +8,43 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
+/**
+ * Classe représentant un Département.
+ * Le Département doit avoir un code d'au moins 1.
+ */
 @Entity
 public class Departement {
-	
+	 /**
+     * Identifiant unique du Département.
+     * Il est généré automatiquement par la base de données lors de l'insertion.
+     */
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	 /**
+     * Code du département.
+     * Doit être au moins égale à 1.
+     */
+	@NotNull(message = "Le code du département ne peut pas être null")
+	@Min(value = 1, message = "Le code du département doit être au moins égal à 1")
 	private int code;
 	
-	public Departement( int code) {
+
+	 /**
+    * Constructeur paramétré pour créer une instance de  Ville}.
+    * 
+    * @param code : le code du département 
+    */
+
+	public Departement(int code) {
 		super();
 		this.code = code;
 	}
-	
+
 	public Departement() {
 		super();
 	}
@@ -29,7 +52,6 @@ public class Departement {
 	@OneToMany(mappedBy = "departement")
 	private List<Ville> villes;
 
-	
 	/**
 	 * @return the id
 	 */
@@ -57,17 +79,12 @@ public class Departement {
 	public void setCode(int code) {
 		this.code = code;
 	}
-	
-	
-	
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(code, id);
 	}
 
-	
-	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -82,9 +99,7 @@ public class Departement {
 
 	@Override
 	public String toString() {
-		return "code = " + code ;
+		return "code = " + code;
 	}
-	
-	
 
 }

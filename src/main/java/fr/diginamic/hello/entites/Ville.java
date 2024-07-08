@@ -12,16 +12,33 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+
+
+/**
+ * Classe représentant une Ville.
+ * La ville doit avoir un nom d'au moins 2 caractères et une population d'au moins 1.
+
+ */
+
 @Entity
 public class Ville {
-
+	 /**
+     * Identifiant unique de la ville.
+     * Il est généré automatiquement par la base de données lors de l'insertion.
+     */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
+	/**
+     * Nom de la ville.
+     * Doit contenir au moins 2 caractères.
+     */
 	@Size(min = 2, message = "Le nom de la ville doit avoir au moins 2 caractères.")
 	private String nom;
-
+	  /**
+     * Population de la ville.
+     * Doit être au moins égale à 1.
+     */
 	@NotNull(message = "La population ne peut pas être nulle.")
 	@Min(value = 1, message = "La population doit être au moins égale à 1.")
 	private int population;
@@ -29,6 +46,15 @@ public class Ville {
 	@ManyToOne
 	@JoinColumn(name = "id_departement")
 	private Departement departement;
+	
+	
+	 /**
+     * Constructeur paramétré pour créer une instance de  Ville}.
+     * 
+     * @param nom le nom de la ville
+     * @param population la population de la ville
+     * @param departement le département auquel la ville appartient
+     */
 
 	public Ville(String nom, int population, Departement departement) {
 		super();

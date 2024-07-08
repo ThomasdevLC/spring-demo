@@ -1,4 +1,4 @@
-package fr.diginamic.hello.services;
+package fr.diginamic.hello;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
