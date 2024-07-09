@@ -2,12 +2,15 @@ package fr.diginamic.hello.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fr.diginamic.hello.dto.VilleDto;
 import fr.diginamic.hello.entites.Departement;
 import fr.diginamic.hello.entites.Ville;
+import fr.diginamic.hello.mapper.VilleMapper;
 import fr.diginamic.hello.repositories.DepartementRepository;
 import fr.diginamic.hello.repositories.VilleRepository;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +32,10 @@ public class VilleService {
 
 	@Autowired
 	private DepartementRepository departementRepository;
+	
+    @Autowired
+    private VilleMapper villeMapper;
+
 	
     /**
     * Extrait toutes les villes de la base de données.
@@ -103,10 +110,15 @@ public class VilleService {
      * 
      * @param idVille l'identifiant de la ville à supprimer
      */
-	public void deleteVille(int idVille) {
-		villeRepository.deleteById(idVille);
+	public boolean deleteVille(int id) {
+	    Optional<Ville> ville = villeRepository.findById(id);
+	    if (ville.isPresent()) {
+	        villeRepository.delete(ville.get());
+	        return true;
+	    } else {
+	        return false;
+	    }
 	}
-
 	
     /**
      * Recherche les villes dont le nom commence par une chaîne de caractères donnée.
@@ -115,10 +127,12 @@ public class VilleService {
      * @return une liste de villes dont le nom commence par la chaîne donnée
      */
 
-	public List<Ville> findVillesStartWith(String start) {
-		return villeRepository.findByNomStartingWith(start);
-	}
-
+	   public List<VilleDto> findVillesStartWith(String start) {
+	        List<Ville> villes = villeRepository.findByNomStartingWith(start);
+	        return villes.stream()
+	                     .map(villeMapper::toDto)
+	                     .collect(Collectors.toList());
+	    }
 	
 	  /**
      * Recherche les villes dont la population est supérieure à une valeur donnée.

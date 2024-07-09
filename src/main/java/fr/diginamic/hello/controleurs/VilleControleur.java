@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.diginamic.hello.dto.VilleDto;
 import fr.diginamic.hello.entites.Ville;
+import fr.diginamic.hello.exceptions.MessageException;
 import fr.diginamic.hello.services.VilleService;
 import jakarta.validation.Valid;
 
@@ -55,10 +57,10 @@ public class VilleControleur {
 	}
 
 	@PostMapping
-	public ResponseEntity<String> createVille(@Valid @RequestBody Ville nvVille, BindingResult validation) {
+	public ResponseEntity<String> createVille(@Valid @RequestBody Ville nvVille, BindingResult validation) throws MessageException {
 
 		if (validation.hasErrors()) {
-			return ResponseEntity.badRequest().body("Erreur de validation ");
+			throw new MessageException(validation.getAllErrors().get(0).getDefaultMessage());
 		}
 
 		villeService.insertVille(nvVille);
@@ -67,11 +69,11 @@ public class VilleControleur {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<String> updateVille(@Valid @PathVariable int id, @RequestBody Ville nvVille,
-			BindingResult validation) {
+	public ResponseEntity<String> updateVille( @PathVariable int id,@Valid @RequestBody Ville nvVille,
+			BindingResult validation) throws MessageException  {
 
 		if (validation.hasErrors()) {
-			return ResponseEntity.badRequest().body("Erreur de validation ");
+			throw new MessageException(validation.getAllErrors().get(0).getDefaultMessage());
 		}
 
 		villeService.updateVille(id, nvVille);
@@ -79,14 +81,18 @@ public class VilleControleur {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteVille(@PathVariable int id) {
-		villeService.deleteVille(id);
-		return ResponseEntity.ok("Ville " + id + " supprimée avec succès !");
+	public ResponseEntity<String> deleteVille(@PathVariable int id) throws MessageException {
+	    boolean isDeleted = villeService.deleteVille(id);
+	    if (!isDeleted) {
+	        throw new MessageException("Erreur: La ville avec l'ID " + id + " n'existe pas.");
+	    }
+	    return ResponseEntity.ok("Ville " + id + " supprimée avec succès !");
 	}
+	
 	
 	@GetMapping("/débutnom/{débutnom}")
     public ResponseEntity<String> getVillesByStartWith(@PathVariable String débutnom) {
-		List<Ville> villes = villeService.findVillesStartWith(débutnom);
+		List<VilleDto> villes = villeService.findVillesStartWith(débutnom);
 
         if (villes.isEmpty()) {
             return  ResponseEntity.badRequest().body("Aucune ville trouvée commençant par  : " + débutnom);
