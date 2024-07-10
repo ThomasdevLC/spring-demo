@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import fr.diginamic.hello.dto.VilleDto;
 import fr.diginamic.hello.entites.Ville;
 import fr.diginamic.hello.exceptions.MessageException;
@@ -35,12 +41,18 @@ public class VilleControleur {
 	private VilleMapper villeMapper;
 
 	@GetMapping
+	@Operation(summary = "Récupérer toutes les villes", description = "Renvoie la liste de toutes les villes disponibles")
 	public List<VilleDto> getVilles() {
 		List<Ville> villes = villeService.extractVilles();
 		return villes.stream().map(villeMapper::toDto).collect(Collectors.toList());
 	}
 
 	@GetMapping("/id/{id}")
+	@Operation(summary = "Récupérer une ville par ID", description = "Renvoie les informations d'une ville spécifiée par son ID")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "La ville a été trouvée et renvoyée", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = VilleDto.class)) }),
+			@ApiResponse(responseCode = "404", description = "Aucune ville trouvée avec l'ID spécifié") })
 	public ResponseEntity<VilleDto> getVilleById(@PathVariable("id") int id) {
 		Optional<Ville> ville = villeService.extractVilleById(id);
 		return ville.map(v -> ResponseEntity.ok(villeMapper.toDto(v))).orElse(ResponseEntity.notFound().build());
