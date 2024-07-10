@@ -4,6 +4,7 @@ package fr.diginamic.hello.startup;
 import fr.diginamic.hello.entites.Departement;
 import fr.diginamic.hello.entites.Ville;
 import fr.diginamic.hello.services.VilleService;
+import fr.diginamic.hello.utils.DepartementCodeUtil;
 
 import java.net.URL;
 import java.nio.file.Files;
@@ -55,8 +56,7 @@ public class ExtractData implements CommandLineRunner {
                 String population = col[7].replace(" ", "").trim();
                 int populationTotale = Integer.parseInt(population);
                 String codeDepartementString = col[2].trim();
-                String codeDepartementDigits = codeDepartementString.replaceAll("[^\\d]", "");
-                int codeDepartement = Integer.parseInt(codeDepartementDigits); 
+                int codeDepartement = DepartementCodeUtil.parseCodeDepartement(codeDepartementString); 
                 
                 Departement departement = new Departement(codeDepartement);
               

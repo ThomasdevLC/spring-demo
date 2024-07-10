@@ -41,7 +41,7 @@ public class Departement {
     */
 
 	public Departement(int code) {
-		super();
+		super(); 
 		this.code = code;
 	}
 

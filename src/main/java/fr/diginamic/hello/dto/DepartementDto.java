@@ -5,12 +5,29 @@ import jakarta.validation.constraints.NotNull;
 
 public class DepartementDto {
 
+	private int id;
+
 	@NotNull(message = "Le code du département ne peut pas être null")
 	@Min(value = 1, message = "Le code du département doit être au moins égal à 1")
-	private int code; 
+	private int code;
 
 	public DepartementDto(int id, int code) {
+		this.id = id;
 		this.code = code;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public DepartementDto() {
