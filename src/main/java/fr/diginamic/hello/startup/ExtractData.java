@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 
 
 @Component
@@ -25,7 +26,9 @@ public class ExtractData implements CommandLineRunner {
     private VilleService villeService;
 
     public static void main(String[] args) {
-        SpringApplication.run(ExtractData.class, args);
+        SpringApplication app = new SpringApplication(ExtractData.class);
+        app.setWebApplicationType(WebApplicationType.NONE); 
+        app.run(args);
     }
 
     @Override
